@@ -39,6 +39,21 @@ class ForgotPasswordController {
         .send({ error: { message: 'Algo não deu certo' } })
     }
   }
+  async update ({ request, response }) {
+    try {
+      const { token, password } = request.all()
+
+      const user = await User.findByOrFail('token', token)
+
+      user.password = password
+      await user.save()
+      return response.status(204).send({ result: { message: 'OK' } })
+    } catch (err) {
+      return response
+        .status(err.status)
+        .send({ error: { message: 'Algo não deu certo' } })
+    }
+  }
 }
 
 module.exports = ForgotPasswordController
