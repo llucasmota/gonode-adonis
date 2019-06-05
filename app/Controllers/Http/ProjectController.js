@@ -4,9 +4,18 @@ const Project = use('App/Models/Project')
 
 class ProjectController {
   async index ({ request, response, view }) {
-    const project = await Project.all()
+    try {
+      const project = await Project.query()
+        .with('user')
+        .fetch()
 
-    return project
+      return project
+    } catch (err) {
+      console.log(err)
+      return response
+        .status(err.status)
+        .send({ error: { message: 'Algo deu errado' } })
+    }
   }
 
   async store ({ request, response, auth }) {
