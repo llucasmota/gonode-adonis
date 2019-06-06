@@ -26,9 +26,12 @@ class ProjectController {
     return project
   }
 
-  async show ({ params, request, response, view }) {
+  async show ({ request, params, response }) {
     try {
       const project = await Project.findOrFail(params.id)
+
+      await project.load('user')
+      await project.load('tasks')
       return project
     } catch (err) {
       return response
@@ -37,9 +40,21 @@ class ProjectController {
     }
   }
 
-  async update ({ params, request, response }) {}
+  async update ({ params, request, response }) {
+    const project = await Project.findOrFail(params.id)
+    const data = request.only(['title', 'description'])
 
-  async destroy ({ params, request, response }) {}
+    project.merge(data)
+    await project.save()
+
+    return project
+  }
+
+  async destroy ({ params, request, response }) {
+    const project = await Project.findOrFail(params.id)
+
+    await project.delete()
+  }
 }
 
 module.exports = ProjectController

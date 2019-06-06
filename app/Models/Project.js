@@ -14,7 +14,7 @@ class Project extends Model {
     /**
      * Representando que um projeto pode ter várias tarefas
      */
-    return this.hasMany('App/Model/Task')
+    return this.hasMany('App/Models/Task')
   }
 }
 
