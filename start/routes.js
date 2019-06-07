@@ -14,4 +14,5 @@ Route.group(() => {
    * Disponibilizar todas as rotas numa única linha
    */
   Route.resource('projects', 'ProjectController').apiOnly()
+  Route.resource('projects.tasks', 'TaskController').apiOnly()
 }).middleware(['auth'])
