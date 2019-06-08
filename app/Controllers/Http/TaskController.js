@@ -12,7 +12,7 @@ class TaskController {
     return task
   }
 
-  async create ({ params, request, response, view }) {
+  async store ({ params, request, response }) {
     const data = request.only([
       'user_id',
       'file_id',
@@ -25,15 +25,36 @@ class TaskController {
     return task
   }
 
-  async store ({ request, response }) {}
+  async show ({ params, request, response, view }) {
+    const task = await Task.findOrFail(params.id)
 
-  async show ({ params, request, response, view }) {}
+    return task
+  }
 
-  async edit ({ params, request, response, view }) {}
+  async update ({ params, request, response }) {
+    try {
+      const task = await Task.findOrFail(params.id)
+      const data = request.only([
+        'user_id',
+        'title',
+        'file_id',
+        'description',
+        'due_date'
+      ])
+      task.merge(data)
+      await task.save()
+    } catch (err) {
+      return response
+        .status(err.status)
+        .send({ error: { message: 'Algo deu errado' } })
+    }
+  }
 
-  async update ({ params, request, response }) {}
+  async destroy ({ params, request, response }) {
+    const task = await Task.findOrFail(params.id)
 
-  async destroy ({ params, request, response }) {}
+    await task.delete()
+  }
 }
 
 module.exports = TaskController
