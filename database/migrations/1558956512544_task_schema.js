@@ -12,7 +12,7 @@ class TaskSchema extends Schema {
         .unsigned() // não poderá ter valores negativos
         .notNullable()
         .references('id') // campo id será uma referência de outro campo em outra tabela
-        .inTable('users') // o campo referência de id está na tabela users
+        .inTable('projects') // o campo referência de id está na tabela users
         .onUpdate('CASCADE') // se houver alteração em users é executado cascade
         .onDelete('CASCADE') // em caso de delete do usuário
       table

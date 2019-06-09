@@ -43,6 +43,8 @@ class TaskController {
       ])
       task.merge(data)
       await task.save()
+
+      return task
     } catch (err) {
       return response
         .status(err.status)
