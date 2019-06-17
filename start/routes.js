@@ -17,6 +17,10 @@ Route.group(() => {
   /**
    * Disponibilizar todas as rotas numa única linha
    */
-  Route.resource('projects', 'ProjectController').apiOnly()
-  Route.resource('projects.tasks', 'TaskController').apiOnly()
+  Route.resource('projects', 'ProjectController')
+    .apiOnly()
+    .validator(new Map([[['projects.store'], ['Project']]]))
+  Route.resource('projects.tasks', 'TaskController')
+    .apiOnly()
+    .validator(new Map([[['projects.tasks.store'], ['Task']]]))
 }).middleware(['auth'])
