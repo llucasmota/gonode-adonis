@@ -21,7 +21,6 @@ class TaskController {
       'due_date'
     ])
     const task = await Task.create({ ...data, project_id: params.projects_id })
-
     return task
   }
 
