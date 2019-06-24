@@ -1,8 +1,8 @@
 'use strict'
 
 const TaskHook = (exports = module.exports = {})
-const Mail = use('Mail')
-const Helpers = use('Helpers')
+const Kue = use('Kue')
+const Job = use('App/Jobs/NewTaskMail')
 
 TaskHook.sendNewTaskMail = async taskInstance => {
   // se a tarefa não possui user.id OU foi enviado um user.id para persistir(ou seja a tarefa tem um novo user.id)
@@ -15,20 +15,5 @@ TaskHook.sendNewTaskMail = async taskInstance => {
   console.log(file)
   const { title } = await taskInstance
 
-  await Mail.send(
-    ['emails.new_task'],
-    { username, title, hasAttachment: !!file }, // !! transforma em booleano o retorno, se tiver arquivo retorna true)
-    message => {
-      message
-        .to(email)
-        .from('lucas.mota@adonis.com', 'Lucas Mota | AdonisJS')
-        .subject('Há uma nova tarefa para voce')
-
-      if (file) {
-        message.attach(Helpers.tmpPath(`uploads/${file.file}`), {
-          filename: file.name
-        })
-      }
-    }
-  )
+  Kue.dispatch(Job.key, { email, username, file, title }, { attempts: 3 })
 }
